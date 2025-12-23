@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Multi-Mode Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #eef2f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 40px;
+      margin: 0;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .mode-buttons {
+      margin-bottom: 20px;
+    }
+    .mode-buttons button {
+      margin: 0 5px;
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background-color: #2196F3;
+      color: white;
+    }
+    .calculator {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 300px;
+    }
+    .calculator input {
+      width: 100%;
+      height: 50px;
+      font-size: 20px;
+      text-align: right;
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .buttons {
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .buttons button {
+      font-size: 18px;
+      padding: 15px;
+      background-color: #f0f0f0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .buttons button.operator {
+      background-color: #f76c6c;
+      color: white;
+    }
+    .buttons button.equal {
+      background-color: #4CAF50;
+      color: white;
+      grid-column: span 2;
+    }
+    .buttons button.clear {
+      background-color: #ff6347;
+      color: white;
+      grid-column: span 2;
+    }
+    .buttons.active {
+      display: grid;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Multi-Mode Calculator</h1>
+
+  <div class="mode-buttons">
+    <button onclick="showMode('simple')">Simple</button>
+    <button onclick="showMode('advanced')">Advanced</button>
+    <button onclick="showMode('more')">More Advanced</button>
+  </div>
+
+  <div class="calculator">
+    <input type="text" id="display" disabled />
+
+    <!-- Simple Mode -->
+    <div id="simple" class="buttons active">
+      <button onclick="clearDisplay()" class="clear">C</button>
+      <button onclick="append('/')">/</button>
+      <button onclick="append('*')">*</button>
+      <button onclick="append('-')">-</button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button onclick="append('+')">+</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button onclick="append('.')">.</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button onclick="append('0')">0</button>
+
+      <button onclick="calculate()" class="equal">=</button>
+      <button onclick="backspace()">←</button>
+    </div>
+
+    <!-- Advanced Mode -->
+    <div id="advanced" class="buttons">
+      <button onclick="clearDisplay()" class="clear">C</button>
+      <button onclick="append('%')">%</button>
+      <button onclick="append('**')">^</button>
+      <button onclick="append('Math.sqrt(')">√</button>
+
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button onclick="append('+')">+</button>
+
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button onclick="append('-')">-</button>
+
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button onclick="append('*')">*</button>
+
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button onclick="append('/')">/</button>
+      <button onclick="calculate()" class="equal">=</button>
+    </div>
+
+    <!-- More Advanced Mode -->
+    <div id="more" class="buttons">
+      <button onclick="clearDisplay()" class="clear">C</button>
+      <button onclick="append('Math.PI')">π</button>
+      <button onclick="append('Math.E')">e</button>
+      <button onclick="append('Math.log(')">ln</button>
+
+      <button onclick="append('Math.sin(')">sin</button>
+      <button onclick="append('Math.cos(')">cos</button>
+      <button onclick="append('Math.tan(')">tan</button>
+      <button onclick="append('Math.log10(')">log</button>
+
+      <button onclick="append('(')">(</button>
+      <button onclick="append(')')">)</button>
+      <button onclick="backspace()">←</button>
+      <button onclick="append(',')">,</button>
+
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button onclick="append('+')">+</button>
+      <button onclick="calculate()" class="equal">=</button>
+    </div>
+  </div>
+
+  <script>
+    function append(val) {
+      document.getElementById("display").value += val;
+    }
+    function clearDisplay() {
+      document.getElementById("display").value = "";
+    }
+    function backspace() {
+      let disp = document.getElementById("display");
+      disp.value = disp.value.slice(0, -1);
+    }
+    function calculate() {
+      let disp = document.getElementById("display");
+      try {
+        disp.value = eval(disp.value);
+      } catch {
+        disp.value = "Error";
+      }
+    }
+    function showMode(mode) {
+      document.querySelectorAll('.buttons').forEach(div => {
+        div.classList.remove('active');
+      });
+      document.getElementById(mode).classList.add('active');
+    }
+  </script>
+
+</body>
+</html>
